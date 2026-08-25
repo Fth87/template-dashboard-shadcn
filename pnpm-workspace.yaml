@@ -1,3 +1,8 @@
 allowBuilds:
   sharp: false
   unrs-resolver: false
+
+# Layout node_modules ala npm (direktori nyata, tanpa symlink).
+# Dipakai karena resolusi Turbopack di beberapa paket (@tiptap/*,
+# @hookform/resolvers) bermasalah dengan layout isolated pnpm.
+nodeLinker: hoisted
