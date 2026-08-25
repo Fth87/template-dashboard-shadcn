@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Template Dashboard
 
-## Getting Started
+Template dashboard **Next.js 16 full client-side** (static export — siap deploy ke Cloudflare Pages) dengan CRUD lengkap, tabel best practice, dan arsitektur **feature-based** yang rapi.
 
-First, run the development server:
+## Fitur
+
+- **Deploy statis** — `pnpm build` menghasilkan folder `out/`; tanpa server. Panduan: [`docs/deployment.md`](./docs/deployment.md).
+- **Tabel lengkap dengan state di URL** — search, filter status & peran, sorting kolom, toggle kolom, pagination + page size. Refresh/share link tidak menghilangkan state.
+- **CRUD penuh** — tambah/edit via dialog form tervalidasi (RHF + Zod), hapus via dialog konfirmasi, toast feedback, cache auto-refresh.
+- **Rich text editor** — [Tiptap](https://tiptap.dev) v3 dengan toolbar lengkap; konten disimpan JSON & dirender ulang via static-renderer (`docs/rich-text.md`).
+- **Mock data in-browser** — latensi simulasi agar loading realistis; ganti ke backend nyata hanya dengan mengubah satu file (`docs/mock-api.md`).
+- **Arsitektur feature-based** — `app/` hanya routing; semua logika hidup di `features/`.
+- **Separation of concerns ketat** — layer `api/`, `hooks/`, `schemas/`, `types/`, `constants/`, `components/` terpisah per fitur.
+- **Atomic design + komponen shadcn resmi** — Sidebar/Data Table/Field pakai komponen bawaan shadcn/ui (Base UI), bukan tulisan ulang.
+- **Dark mode**, responsif.
+
+## Stack
+
+Next.js 16 (App Router · Turbopack · static export) · React 19 · TypeScript strict · Tailwind CSS v4 (+ typography plugin) · shadcn/ui (Base UI) · TanStack Table v9 · TanStack Query v5 · React Hook Form 7 + Zod 4 · Tiptap v3 · nuqs · sonner
+
+## Mulai
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
+pnpm dev        # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Perintah lain:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm build              # build produksi → folder out/
+pnpm start              # tidak dipakai di mode export (lihat docs/deployment.md)
+pnpm lint               # eslint
+pnpm exec tsc --noEmit  # typecheck
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Struktur Singkat
 
-## Learn More
+```
+src/
+├── app/                 # routing saja (+ providers)
+├── features/
+│   ├── users/           # api/ hooks/ components/ schemas/ types/ constants/
+│   ├── posts/           # CRUD artikel dengan Tiptap rich text editor
+│   └── dashboard/       # stat cards + charts client-side
+├── components/          # ui/ (atom) · data-table/ · rich-text-editor/ · layout/
+├── lib/                 # api-client, zod-resolver, query-client, utils
+├── hooks/               # hook global (use-mobile dari Sidebar shadcn)
+└── config/, types/
+docs/                    # dokumentasi arsitektur & playbook
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Deploy (Cloudflare Pages)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Build command: `pnpm build`
+2. Output directory: `out`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Detail & alternatif Wrangler CLI: [`docs/deployment.md`](./docs/deployment.md).
 
-## Deploy on Vercel
+## Dokumentasi
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Lihat [`docs/`](./docs/README.md):
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Dokumen | Isi |
+| --- | --- |
+| [architecture](./docs/architecture.md) | Peta folder & aturan dependency |
+| [conventions](./docs/conventions.md) | Konvensi kode & atomic design |
+| [features](./docs/features.md) | Playbook menambah fitur baru |
+| [url-state](./docs/url-state.md) | Kontrak query params tabel |
+| [data-fetching](./docs/data-fetching.md) | TanStack Query patterns |
+| [forms-validation](./docs/forms-validation.md) | RHF + Zod satu skema |
+| [data-table](./docs/data-table.md) | Catatan TanStack Table v9 |
+| [mock-api](./docs/mock-api.md) | Mock data client-side & ganti ke API nyata |
+| [deployment](./docs/deployment.md) | Deploy static export ke Cloudflare Pages |
+
+> Untuk agent/AI: baca [`AGENTS.md`](./AGENTS.md) sebelum menulis kode.
